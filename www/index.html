@@ -1,0 +1,841 @@
+
+<!DOCTYPE html>
+<!--HTML5 doctype-->
+<html>
+
+<head>
+<style>
+#scoring{
+width:100%;
+background-size:cover;
+background-position:center;
+}
+#instr{
+background-color: black;
+}
+.inst{
+width:100%;
+}
+#about{
+    background-position:center;
+    background-image: url("score.png");
+    background-size:cover;
+}
+    #inst{
+
+    background-position:center;
+    background-image: url("score.png");
+    background-size:cover;
+    }
+    #p1{
+
+    float: left;
+    color:skyblue;
+    border:solid skyblue;
+    }
+    #alt{
+
+    float: left;
+    color:skyblue;
+    border:solid skyblue;
+    }
+#dev{
+    float:left;
+position:absolute;
+bottom:0px;
+}
+    #move{
+
+        float:right;
+    color:white;
+    border:solid black;
+    }
+#tab1{
+background-size: contain;
+background-repeat: no-repeat;
+background-position: center;
+}
+#tab2{
+background-size: contain;
+background-repeat: no-repeat;
+background-position: center;
+}
+.gft{
+width:100%;
+}
+#gfoot{
+background-image: url("main.png");
+    background-size: cover;
+}
+.t1{
+width: 100%;  
+}
+#screen{
+background-color: black;
+}
+#main{
+    background-position:center;
+background-image: url("splash2.png");
+    background-size:cover;
+}
+#cts1,#bht3,#bht5,#cte7,#cen9,#cen11,#cen13,#bvs15,#cen17,#cen19,#bve21,#cen23,#cen25,#cen27,#bvs29,#cen31,#cen33,#bve35,#cen37,#cen39,#cen41,#cbs43,#bhb45,#bhb47,#cbe49{
+background-color:#464850;
+}
+#bht2,#bht6,#bvs8,#cen10,#cen12,#bve14,#cen16,#cen18,#cen20,#bvs22,#cen24,#cen26,#bve28,#cen30,#cen32,#cen34,#bvs36,#cen38,#cen40,#bve42,#bhb44,#bhb48{
+background-color: white; 
+}
+#board{
+
+background-size: cover;
+background-position: center;
+width:100%;
+}
+#arena{
+background-image: url("score.png");
+background-size: cover;
+background-position: center;
+width:100%;
+}
+#scoreboard{
+
+background-size: cover;
+background-position: center;
+position: fixed;
+width:100%;
+}
+.block
+{
+    width: 12.28%;
+        display: inline-block;
+
+    margin-left:2%;
+}
+#retu{
+    object-position:center;
+}
+#bht4{
+    background-color: black;
+    }
+#bhb46{
+    background-color: black;
+    }
+.drag1{
+width:100%;
+    height:100%;
+    float: left;
+}
+.drag2{
+width:100%;
+    height:100%;
+    float: left;
+}
+</style>
+    <title>Tab View Template</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" href="build/icons.css" />
+    <link rel="stylesheet" type="text/css" href="build/af.ui.css" />
+     <script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/fastclick.min.js"></script>
+<script type="application/javascript">
+if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+    }, false);
+}
+</script>
+    <script type="text/javascript" charset="utf-8" src="build/appframework.ui.js"></script>
+
+</head>
+
+<body id="screen">
+
+    <script>
+        document.addEventListener("intel.xdk.device.ready",function() {
+            //this function intercepts the backbutton click. When user clicks the back button it fires the intel.xdk.device.hardware.back event.
+            intel.xdk.device.addVirtualPage(); 
+        },false);
+
+        
+        document.addEventListener("intel.xdk.device.hardware.back", function() {
+            window.location="index.html";
+            //continue to grab the back button
+            intel.xdk.device.addVirtualPage();
+            
+        }, false);
+    
+    </script>
+ <script>
+$(window).ready(updateHeight);
+$(window).resize(updateHeight);
+
+function updateHeight()
+{
+    var arena=$('#arena');
+    var arena_ht=arena.height();
+    var ghead=$('.ghead');
+    var g_len=ghead.height();
+    var div = $('.block');
+    var width_block = div.width();
+    var board=$('#board');
+    var board_height=screen.availHeight-2*g_len;
+    var board_width=board.width();
+    var block_size=board_height/10;
+    board.css('top',g_len);
+    div.css('height',screen.availWidth*0.1228);
+    var t1=$('.t1');
+    t1.css('height',screen.availHeight*0.1);
+
+    var gft=$('.gft');
+    gft.css('height',g_len);
+
+}
+</script>
+<script>
+        var counter;
+        var pre_click_1;
+        var temp_p_1;
+        var final_p_1;
+        var pre_click_2;
+        var temp_p_2;
+        var final_p_2;
+        var turn;       // turn is of blue of turn==1      and turn is of green if turn==0
+        var hole;
+ 
+    function init(){
+         counter=0;
+         pre_click_1;
+         temp_p_1;
+         final_p_1=4;
+         pre_click_2;
+         temp_p_2;
+         final_p_2=46;
+         turn=1;       // turn is of blue of turn==1      and turn is of green if turn==0
+         hole=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+        hole[4]=0;
+        hole[46]=0;
+ 
+    
+    }
+function show_again(){
+location.reload();  
+}
+function show_again1(){
+location.reload();  
+}
+function happy(){
+
+window.location="index.html";
+
+}
+function shappy(){
+var check=confirm("Do you really want to restart?");
+if(check==true)
+location.reload();
+else;
+
+}
+naming="";
+function getname(){
+
+var check1=0;
+var score=counter;
+var get_this=0;
+check1=localStorage.getItem("higher1");
+if(check1===null){
+    localStorage.setItem("higher1",100);
+}
+if(score<=check1){
+
+if(score<=50 && score >45)
+    score=10;
+else if(score<=45 && score>40)
+    score=20;
+else if(score<=40 && score>35)
+    score=30;
+else if(score<=35 && score>30)
+    score=40;
+else if(score<=30 && score>25)
+    score=50;
+else if(score<=25 && score>20)
+    score=60; 
+else if(score<=20 && score>15)
+    score=70; 
+else if(score<=15 && score>10)
+    score=80;  
+else if(score<=10 && score>5)
+    score=90; 
+localStorage.setItem("higher1",score);
+var ans=localStorage.getItem("higher1");
+get_this=1;
+
+naming=document.getElementById("fname").value;
+localStorage.setItem("name",naming);
+}
+
+window.location="index.html";
+
+}
+function getScore(a){
+  
+if(a<=50 && a >45)
+    return 10;
+else if(a<=45 && a>40)
+    return 20;
+else if(a<=40 && a>35)
+    return 30;
+else if(a<=35 && a>30)
+    return 40;
+else if(a<=30 && a>25)
+    return 50;
+else if(a<=25 && a>20)
+    return 60; 
+else if(a<=20 && a>15)
+    return 70; 
+else if(a<=15 && a>10)
+    return 80;  
+else if(a<=10 && a>5)
+    return 90;
+return 0;
+    }
+    function score_1(){
+                     var range=getScore(counter);
+                        $('#board').hide();
+                        $('.block').hide();
+                        $('#alt').hide();
+                        $('#move').hide();
+
+//document.write(ans);
+
+                        
+                        document.getElementById("scoreboard").style.backgroundImage="url('score.png')";                           document.getElementById("scoreboard").style.height="100%";
+                        document.getElementById("scoreboard").style.textAlign="center";
+                        document.getElementById("scoreboard").style.fontSize="2em";
+                        document.getElementById("scoreboard").style.color="white";
+                        document.getElementById("scoreboard").innerHTML="<br>Player 2 Won<br>"+"<img src='trophy.png'><br>"+"Total Moves:&nbsp;"+counter+"<br><input  type='text' id='fname' placeholder='Enter Your Name' style='background-color:#AFBBB9'; color:black;></input><br><button style='display: block; width: 100%; background-color:#004E42; color:white;' onclick='getname()'>Done</button>"+"<br>Your Score :  "+range+"<br><br>HighScore : "+localStorage.getItem("higher1");
+
+
+
+
+   
+    
+    }
+
+    function score_2(){
+                        var range=getScore(counter);
+                        $('#board').hide();
+                        $('.block').hide();
+                        $('#alt').hide();
+                        $('#move').hide();
+                        document.getElementById("scoreboard").style.backgroundImage="url('score.png')";                           document.getElementById("scoreboard").style.height="100%";
+                        document.getElementById("scoreboard").style.textAlign="center";
+                        document.getElementById("scoreboard").style.fontSize="2em";
+                        document.getElementById("scoreboard").style.color="white";
+                        document.getElementById("scoreboard").innerHTML="<br><br>Player 1 Won<br>"+"<img src='trophy.png'><br>"+"Total Moves:&nbsp;"+counter+"<br><input  type='text' id='fname' placeholder='Enter Your Name' style='background-color:#AFBBB9'; color:black;></input><button style='display: block; width: 100%; background-color:#004E42; color:white;' onclick='getname()'>Done</button>"+"<br>Your Score :  "+range+"<br><br>HighScore : "+localStorage.getItem("higher1");
+   
+    
+    }
+$("#page4").ready(function() {
+    document.getElementById("scoring").style.backgroundImage="url('green1.png')";
+    document.getElementById("scoring").style.textAlign="center";
+    document.getElementById("scoring").style.fontSize="2em";
+    document.getElementById("scoring").innerHTML="<br>"+localStorage.getItem("name")+" : "+localStorage.getItem("higher1")+" points<br><br>";
+    
+});
+$("#page2").ready(function() {
+        init();
+
+      $(".block").tap(function() {
+   document.addEventListener("intel.xdk.device.ready",function(){
+            //you have to call this function inside a event handler.
+            intel.xdk.notification.vibrate();
+        },false);
+        if(turn==1){
+            var imag=$(".drag1");
+            var id_click_1=$(this).attr('id');
+            var id_click_len_1=id_click_1.length;
+            if(id_click_len_1==4){
+                var temp_c_1=id_click_1.substr(3,1);
+                var final_c_1=Number(temp_c_1);
+            }
+            else if(id_click_len_1==5){
+                var temp_c_1=id_click_1.substr(3,2);
+                var final_c_1=Number(temp_c_1);
+            }
+            console.log("Value of the current clicked: "+final_c_1);
+            if(final_p_1==1){
+                if((final_c_1==2 || final_c_1==8 ||final_c_1==9) && hole[final_c_1]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_1);
+                                final_p_1=final_c_1;   
+                                turn=0;
+                                hole[final_c_1]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 2";
+                        document.getElementById("alt").style.color="lightgreen";  
+                        document.getElementById("alt").style.border = "solid lightgreen";
+                }
+                else if(hole[2]==0 && hole[8]==0 && hole[9]==0)
+                    //document.write("Game exit  Blue King loose");
+
+                    score_1();
+ 
+            }
+            else if(final_p_1==7){
+                if((final_c_1==6 || final_c_1==14 ||final_c_1==13) && hole[final_c_1]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_1);
+                                final_p_1=final_c_1;
+                                turn=0;
+                                hole[final_c_1]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 2";
+                        document.getElementById("alt").style.color="lightgreen";  
+                        document.getElementById("alt").style.border = "solid lightgreen";
+                }
+                else if(hole[6]==0 && hole[14]==0 && hole[13]==0){
+                    //document.write("Game exit  Blue King loose");
+
+                    score_1();
+                    
+                    
+                }
+                        
+            }
+            else if(final_p_1==43){
+                if((final_c_1==36 || final_c_1==37 ||final_c_1==44) && hole[final_c_1]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_1);
+                                final_p_1=final_c_1;
+                                turn=0;
+                                hole[final_c_1]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;s
+                        document.getElementById("alt").innerHTML="Turn : Player 2";
+                        document.getElementById("alt").style.color="lightgreen"; 
+                        document.getElementById("alt").style.border = "solid lightgreen";
+                    
+                }
+                else if(hole[36]==0 && hole[37]==0 && hole[44]==0)
+
+                    score_1();
+            }
+            else if(final_p_1==49){
+                if((final_c_1==42 || final_c_1==48 ||final_c_1==41) && hole[final_c_1]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_1);
+                                final_p_1=final_c_1;
+                                turn=0;
+                                hole[final_c_1]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 2";
+                        document.getElementById("alt").style.color="lightgreen"; 
+                        document.getElementById("alt").style.border = "solid lightgreen";
+                }
+                else if(hole[42]==0 && hole[48]==0 && hole[41]==0)
+
+                    score_1();
+            }
+            else if(final_p_1==2 || final_p_1==3 ||final_p_1==4 ||final_p_1==5 ||final_p_1==6){
+                if((final_c_1==final_p_1+7 || final_c_1==final_p_1+6 ||final_c_1==final_p_1+8 ||final_c_1==final_p_1+1 ||final_c_1==final_p_1-1) && hole[final_c_1]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_1);
+                                final_p_1=final_c_1;
+                                turn=0;
+                                hole[final_c_1]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 2";
+                        document.getElementById("alt").style.color="lightgreen"; 
+                        document.getElementById("alt").style.border = "solid lightgreen";
+                }
+                else if(hole[final_p_1+7]==0 && hole[final_p_1+6]==0 && hole[final_p_1+8]==0 && hole[final_p_1+1]==0 && hole[final_p_1-1]==0)
+
+                    score_1();
+            }
+            else if(final_p_1==44 || final_p_1==45 ||final_p_1==46 ||final_p_1==47 ||final_p_1==48){
+                if((final_c_1==final_p_1-7 || final_c_1==final_p_1-6 ||final_c_1==final_p_1-8 ||final_c_1==final_p_1+1 ||final_c_1==final_p_1-1) && hole[final_c_1]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_1);
+                                final_p_1=final_c_1;
+                                turn=0;
+                                hole[final_c_1]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 2";
+                        document.getElementById("alt").style.color="lightgreen"; 
+                        document.getElementById("alt").style.border = "solid lightgreen";
+                }
+                else if(hole[final_p_1-7]==0 && hole[final_p_1-6]==0 && hole[final_p_1-8]==0 && hole[final_p_1+1]==0 && hole[final_p_1-1]==0)
+
+                    score_1();
+            }
+            else if(final_p_1==8 || final_p_1==15 ||final_p_1==22 ||final_p_1==29 ||final_p_1==36){
+                if((final_c_1==final_p_1+1 || final_c_1==final_p_1-7 ||final_c_1==final_p_1-6 ||final_c_1==final_p_1+7 ||final_c_1==final_p_1+8) && hole[final_c_1]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_1);
+                                final_p_1=final_c_1;
+                                turn=0;
+                                hole[final_c_1]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 2";
+                        document.getElementById("alt").style.color="lightgreen";  
+                        document.getElementById("alt").style.border = "solid lightgreen";
+                }
+                else if(hole[final_p_1+1]==0 && hole[final_p_1-7]==0 && hole[final_p_1-6]==0 && hole[final_p_1+7]==0 && hole[final_p_1+8]==0)
+                    //document.write("Game exit  Blue King loose");
+                    
+                    score_1();
+            }
+            else if(final_p_1==14 || final_p_1==21 ||final_p_1==28 ||final_p_1==35 ||final_p_1==42){
+                if((final_c_1==final_p_1-1 || final_c_1==final_p_1-7 ||final_c_1==final_p_1+6 ||final_c_1==final_p_1+7 ||final_c_1==final_p_1-8) && hole[final_c_1]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_1);
+                                final_p_1=final_c_1;
+                                turn=0;
+                                hole[final_c_1]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 2";
+                        document.getElementById("alt").style.color="lightgreen";  
+                        document.getElementById("alt").style.border = "solid lightgreen";
+                }
+                else if(hole[final_p_1-1]==0 && hole[final_p_1-7]==0 && hole[final_p_1+6]==0 && hole[final_p_1+7]==0 && hole[final_p_1-8]==0)
+                    //document.write("Game exit  Blue King loose");
+                    
+                    score_1();
+            }
+            else{
+                if((final_c_1==final_p_1-1 ||final_c_1==final_p_1+1 ||final_c_1==final_p_1-7 ||final_c_1==final_p_1+7 ||final_c_1==final_p_1+8 ||final_c_1==final_p_1+6 ||final_c_1==final_p_1-8 ||final_c_1==final_p_1-6) && hole[final_c_1]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_1);
+                                final_p_1=final_c_1;
+                                turn=0;
+                                hole[final_c_1]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 2";
+                        document.getElementById("alt").style.color="lightgreen";  
+                        document.getElementById("alt").style.border = "solid lightgreen";
+                }
+                else if(hole[final_p_1-1]==0 && hole[final_p_1+1]==0 && hole[final_p_1-7]==0 && hole[final_p_1+7]==0 && hole[final_p_1+8]==0 && hole[final_p_1+6]==0 && hole[final_p_1-8]==0 && hole[final_p_1-6]==0)
+                    //document.write("Game exit  Blue King loose");
+                   
+                    score_1();
+            }
+
+        
+}
+        else if(turn==0){
+            var imag=$(".drag2");
+            var id_click_2=$(this).attr('id');
+            var id_click_len_2=id_click_2.length;
+            if(id_click_len_2==4){
+                var temp_c_2=id_click_2.substr(3,1);
+                var final_c_2=Number(temp_c_2);
+            }
+            else if(id_click_len_2==5){
+                var temp_c_2=id_click_2.substr(3,2);
+                var final_c_2=Number(temp_c_2);
+            }
+            console.log("Value of the current clicked: "+final_c_2);
+            if(final_p_2==1){
+                if((final_c_2==2 || final_c_2==8 ||final_c_2==9) && hole[final_c_2]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_2);
+                                final_p_2=final_c_2;   
+                                turn=1;
+                                hole[final_c_2]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 1";
+                        document.getElementById("alt").style.color="skyblue"; 
+                        document.getElementById("alt").style.border = "solid skyblue";
+                }
+                else if(hole[2]==0 && hole[8]==0 && hole[9]==0)
+                    //document.write("Game exit  Green King loose");
+                    score_2();
+            }
+            else if(final_p_2==7){
+                if((final_c_2==6 || final_c_2==14 ||final_c_2==13) && hole[final_c_2]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_2);
+                                final_p_2=final_c_2;
+                                turn=1;
+                                hole[final_c_2]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 1";
+                        document.getElementById("alt").style.color="skyblue"; 
+                        document.getElementById("alt").style.border = "solid skyblue";
+                }
+                else if(hole[6]==0 && hole[14]==0 && hole[13]==0)
+                    //document.write("Game exit  Green King loose");
+                   score_2();
+            }
+            else if(final_p_2==43){
+                if((final_c_2==36 || final_c_2==37 ||final_c_2==44) && hole[final_c_2]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_2);
+                                final_p_2=final_c_2;
+                                turn=1;
+                                hole[final_c_2]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 1";
+                        document.getElementById("alt").style.color="skyblue"; 
+                        document.getElementById("alt").style.border = "solid skyblue";
+                }
+                else if(hole[36]==0 && hole[37]==0 && hole[44]==0)
+                    //document.write("Game exit  Green King loose");
+                        score_2();
+            }
+            else if(final_p_2==49){
+                if((final_c_2==42 || final_c_2==48 ||final_c_2==41) && hole[final_c_2]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_2);
+                                final_p_2=final_c_2;
+                                turn=1;
+                                hole[final_c_2]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 1";
+                        document.getElementById("alt").style.color="skyblue"; 
+                        document.getElementById("alt").style.border = "solid skyblue";
+                }
+                else if(hole[42]==0 && hole[48]==0 && hole[41]==0)
+                    //document.write("Game exit  Green King loose");
+                   score_2();
+            }
+            else if(final_p_2==2 || final_p_2==3 ||final_p_2==4 ||final_p_2==5 ||final_p_2==6){
+                if((final_c_2==final_p_2+7 || final_c_2==final_p_2+6 ||final_c_2==final_p_2+8 ||final_c_2==final_p_2+1 ||final_c_2==final_p_2-1) && hole[final_c_2]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_2);
+                                final_p_2=final_c_2;
+                                turn=1;
+                                hole[final_c_2]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 1";
+                        document.getElementById("alt").style.color="skyblue"; 
+                        document.getElementById("alt").style.border = "solid skyblue";
+                }
+                else if(hole[final_p_2+7]==0 && hole[final_p_2+6]==0 && hole[final_p_2+8]==0 && hole[final_p_2+1]==0 && hole[final_p_2-1]==0)
+                    //document.write("Game exit  Green King loose");
+                   score_2();
+            }
+            else if(final_p_2==44 || final_p_2==45 ||final_p_2==46 ||final_p_2==47 ||final_p_2==48){
+                if((final_c_2==final_p_2-7 || final_c_2==final_p_2-6 ||final_c_2==final_p_2-8 ||final_c_2==final_p_2+1 ||final_c_2==final_p_2-1) && hole[final_c_2]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_2);
+                                final_p_2=final_c_2;
+                                turn=1;
+                                hole[final_c_2]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 1";
+                        document.getElementById("alt").style.color="skyblue"; 
+                        document.getElementById("alt").style.border = "solid skyblue";
+                }
+                else if(hole[final_p_2-7]==0 && hole[final_p_2-6]==0 && hole[final_p_2-8]==0 && hole[final_p_2+1]==0 && hole[final_p_2-1]==0)
+                    //document.write("Game exit  Green King loose");
+                   score_2();
+            }
+            else if(final_p_2==8 || final_p_2==15 ||final_p_2==22 ||final_p_2==29 ||final_p_2==36){
+                if((final_c_2==final_p_2+1 || final_c_2==final_p_2-7 ||final_c_2==final_p_2-6 ||final_c_2==final_p_2+7 ||final_c_2==final_p_2+8) && hole[final_c_2]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_2);
+                                final_p_2=final_c_2;
+                                turn=1;
+                                hole[final_c_2]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 1";
+                        document.getElementById("alt").style.color="skyblue"; 
+                        document.getElementById("alt").style.border = "solid skyblue";
+                }
+                else if(hole[final_p_2+1]==0 && hole[final_p_2-7]==0 && hole[final_p_2-6]==0 && hole[final_p_2+7]==0 && hole[final_p_2+8]==0)
+                    //document.write("Game exit  Green King loose");
+                   score_2();
+            }
+            else if(final_p_2==14 || final_p_2==21 ||final_p_2==28 ||final_p_2==35 ||final_p_2==42){
+                if((final_c_2==final_p_2-1 || final_c_2==final_p_2-7 ||final_c_2==final_p_2+6 ||final_c_2==final_p_2+7 ||final_c_2==final_p_2-8) && hole[final_c_2]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_2);
+                                final_p_2=final_c_2;
+                                turn=1;
+                                hole[final_c_2]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 1";
+                        document.getElementById("alt").style.color="skyblue"; 
+                        document.getElementById("alt").style.border = "solid skyblue";
+                }
+                else if(hole[final_p_2-1]==0 && hole[final_p_2-7]==0 && hole[final_p_2+6]==0 && hole[final_p_2+7]==0 && hole[final_p_2-8]==0)
+                    //document.write("Game exit  Green King loose");
+                   score_2();
+            }
+            else{
+                if((final_c_2==final_p_2-1 ||final_c_2==final_p_2+1 ||final_c_2==final_p_2-7 ||final_c_2==final_p_2+7 ||final_c_2==final_p_2+8 ||final_c_2==final_p_2+6 ||final_c_2==final_p_2-8 ||final_c_2==final_p_2-6) && hole[final_c_2]==1){
+                               $(this).html(imag).css("background-color","black"); 
+                                console.log("Value of the previous clicked: "+final_p_2);
+                                final_p_2=final_c_2;
+                                turn=1;
+                                hole[final_c_2]=0;
+                        ++counter;
+                        document.getElementById("move").innerHTML="Total Moves :"+counter;
+                        document.getElementById("alt").innerHTML="Turn : Player 1";
+                        document.getElementById("alt").style.color="skyblue"; 
+                        document.getElementById("alt").style.border = "solid skyblue";
+                }
+                else if(hole[final_p_2-1]==0 && hole[final_p_2+1]==0 && hole[final_p_2-7]==0 && hole[final_p_2+7]==0 && hole[final_p_2+8]==0 && hole[final_p_2+6]==0 && hole[final_p_2-8]==0 && hole[final_p_2-6]==0)
+                    //document.write("Game exit  Green King loose");                
+                   score_2();
+            }
+
+    
+        }
+      });                      
+});
+
+</script>
+
+    <div id="splashscreen" class='ui-loader heavy'>
+        Game For Throne
+        <br>
+        <br>
+        <span class='ui-icon ui-icon-loading spin'></span>
+        <h1>Loading....</h1>
+    </div>
+
+    <div class="view" id="page1">
+<!--
+        <header class="ghead">
+            <img src="title.png" class="gft"></img>
+        </header>
+-->
+        <div class="pages">
+        <div class="panel" data-title="Home" id="main" data-selected="true">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br><br><br>
+        <a href="#page2"><img src="play1.png" class="t1" data-transition="pop"></img></a>
+        <a href="#page3"><img src="instructions2.png" class="t1"></img></a>
+
+        <a href="#page4"><img src="highscore1.png" class="t1"></img></a>
+        </div>
+
+
+    </div>
+    </div>
+    <div class="view" id="page2">
+        <header class="ghead">
+            <img src="title.png" class="gft"></img>
+        </header>
+
+        <div class="pages" id="arena">
+    <div id="scoreboard"></div>
+<div id="board">
+<br>
+<div id="cts1" class="block"></div><div id="bht2" class="block"></div><div id="bht3" class="block"></div><div id="bht4" class="block"><img src="k1.png" class="drag1"></img></div><div id="bht5" class="block"></div><div id="bht6" class="block"></div><div id="cte7" class="block"></div>
+<br>
+<div id="bvs8" class="block"></div><div id="cen9" class="block"></div><div id="cen10" class="block"></div><div id="cen11" class="block"></div><div id="cen12" class="block"></div><div id="cen13" class="block"></div><div id="bve14" class="block"></div>
+<br>
+<div id="bvs15" class="block"></div><div id="cen16" class="block"></div><div id="cen17" class="block"></div><div id="cen18" class="block"></div><div id="cen19" class="block"></div><div id="cen20" class="block"></div><div id="bve21" class="block"></div>
+<br>
+<div id="bvs22" class="block"></div><div id="cen23" class="block"></div><div id="cen24" class="block"></div><div id="cen25" class="block"></div><div id="cen26" class="block"></div><div id="cen27" class="block"></div><div id="bve28" class="block"></div>
+<br>
+<div id="bvs29" class="block"></div><div id="cen30" class="block"></div><div id="cen31" class="block"></div><div id="cen32" class="block"></div><div id="cen33" class="block"></div><div id="cen34" class="block"></div><div id="bve35" class="block"></div>
+<br>
+<div id="bvs36" class="block"></div><div id="cen37" class="block"></div><div id="cen38" class="block"></div><div id="cen39" class="block"></div><div id="cen40" class="block"></div><div id="cen41" class="block"></div><div id="bve42" class="block"></div>
+<br>
+<div id="cbs43" class="block"></div><div id="bhb44" class="block"></div><div id="bhb45" class="block"></div><div id="bhb46" class="block"><img src="k2.png" class="drag2"></img></div><div id="bhb47" class="block"></div><div id="bhb48" class="block"></div><div id="cbe49" class="block"></div>
+<inline><p id="alt" id>&nbsp;&nbsp;Turn : Player 1 &nbsp;&nbsp;</p>
+<p id="move" id>&nbsp;&nbsp;Total Moves: 0  &nbsp;&nbsp; </p></inline>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</div>
+
+        </div>
+
+        <footer id="gfoot">
+            <a href="#" class="icon home" id='tab1' onclick="happy()" data-transition="none">Home</a>
+            <a href="#" class="" id='tab2' data-transition="none" onclick="shappy()"><img src="retry.png"   id="retu"></img></a>
+            <a href="#page5" class="icon info" id='tab3' data-transition="slide-full">About</a>
+        </footer>
+    </div>
+    <div class="view" id="page3">
+        <header class="ghead">
+            <img src="title.png" class="gft"></img>
+        </header>
+        <div class="pages" id="instr">
+        <img src="instruction.png" class="inst"></img>
+
+    </div>
+        <footer id="gfoot">
+            <a href="#page1" class="icon home" id='tab2' data-transition="none">Home</a>
+            <a href="#about" class="icon info" id='tab3' data-transition="slide-full">About</a>
+        </footer>
+    </div>
+    <div class="view" id="page4">
+        <header class="ghead">
+            <img src="highscore2.png" class="gft"></img>
+        </header>
+        <div class="pages" id="inst">
+<br><br>
+            <center><img src="trophy.png"></img></center>
+<div id="scoring"></div>
+    </div>
+        <footer id="gfoot">
+            <a href="#page1" class="icon home" id='tab2' data-transition="none">Home</a>
+            <a href="#about" class="icon info" id='tab3' data-transition="slide-full">About</a>
+        </footer>
+    </div>
+    <div class="view" id="page5">
+        <header class="ghead">
+            <img src="about.png" class="gft"></img>
+        </header>
+        <div class="pages" id="about">
+<br><br><br>
+<center><h1 style="font-family:Goudy Old Style;  color:white;">We are a unique blend of creative designers and developers. We love what we do and we believe apps help people build the future they want to see. We build dreams. Build yours with us.</h1></center><br>
+            <center><img src="logo1.png" style="width:30%;"></img></center>
+     <img src="dev.png" id="dev" style="width:100%;"></img>
+
+    </div>
+        <footer id="gfoot">
+            <a href="#page1" class="icon home" id='tab2' data-transition="none">Home</a>
+
+        </footer>
+    </div>
+
+
+</body>
+
+</html>
